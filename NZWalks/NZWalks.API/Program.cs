@@ -18,6 +18,9 @@ builder.Services.AddDbContext<NZWalksDbContext>(options =>
 
 //when I ask IRegionRepository, give me the implementation of RegionRepos
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
