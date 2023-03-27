@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
 
 namespace NZWalks.API.Controllers
@@ -10,10 +11,14 @@ namespace NZWalks.API.Controllers
     {
         private readonly IWalkRepository walkRepository;
         private readonly IMapper mapper;
-        public WalksController(IWalkRepository walkRepository, IMapper mapper)
+        private readonly IRegionRepository regionRepository;
+        private readonly IWalkDifficultyRepository walkDifficultyRepository;
+        public WalksController(IWalkRepository walkRepository, IMapper mapper, IRegionRepository regionRepository, IWalkDifficultyRepository walkDifficultyRepository)
         {
             this.walkRepository = walkRepository;
             this.mapper = mapper;
+            this.regionRepository = regionRepository;
+            this.walkDifficultyRepository = walkDifficultyRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllWalksAsync()
@@ -44,6 +49,12 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddWalkAsync([FromBody] Models.DTO.AddWalkRequest request)
         {
+            //Validate the imcoming request
+            if(!(await ValidateAddWalkAsync(request)))
+            {
+                return BadRequest(ModelState);
+            }
+
             //convert dto to domain object
             var walkDomain = new Models.Domain.Walk
             {
@@ -105,5 +116,43 @@ namespace NZWalks.API.Controllers
             var walkDTO = mapper.Map<Models.DTO.Walk>(walkDomain);
             return Ok(walkDTO);
         }
+
+
+        #region Private Method
+        private async Task<bool> ValidateAddWalkAsync(AddWalkRequest request)
+        {
+           /* if(request == null)
+            {
+                ModelState.AddModelError(nameof(request),
+                    $"{nameof(request)} cannot be less than or equal to zero");
+                return false; 
+            }
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                ModelState.AddModelError(nameof(request.Name),
+                    $"{nameof(request.Name)} is required");
+            } */ 
+
+            var region = await regionRepository.GetAsync(request.RegionId);
+            if(region == null)
+            {
+                ModelState.AddModelError(nameof(request.RegionId),
+                    $"{nameof(request.RegionId)} is invalid");
+            }
+            var walkDifficulity = await walkDifficultyRepository.GetAsync(request.WalkDifficultyId);
+            if(walkDifficulity == null)
+            {
+                ModelState.AddModelError(nameof(request.WalkDifficultyId),
+                    $"{nameof(request.WalkDifficultyId)} is invalid");
+            }
+
+            if(ModelState.ErrorCount > 0)
+            {
+                return false; 
+            }
+
+            return true; 
+        }
+        #endregion
     }
 }
