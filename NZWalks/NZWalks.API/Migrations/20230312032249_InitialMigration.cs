@@ -19,7 +19,7 @@ namespace NZWalks.API.Migrations
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Area = table.Column<double>(type: "float", nullable: false),
-                    Log = table.Column<double>(type: "float", nullable: false),
+                    Long = table.Column<double>(type: "float", nullable: false),
                     Lat = table.Column<double>(type: "float", nullable: false),
                     Population = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -48,7 +48,6 @@ namespace NZWalks.API.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Length = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WalkDifficultId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WalkDifficultyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

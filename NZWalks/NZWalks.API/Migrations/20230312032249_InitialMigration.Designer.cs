@@ -41,7 +41,7 @@ namespace NZWalks.API.Migrations
                     b.Property<double>("Lat")
                         .HasColumnType("float");
 
-                    b.Property<double>("Log")
+                    b.Property<double>("Long")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
@@ -71,9 +71,6 @@ namespace NZWalks.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RegionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WalkDifficultId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("WalkDifficultyId")
